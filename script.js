@@ -22,42 +22,20 @@ function mostrarCartonEnTabla(carton, tabla) {
   // Limpiar contenido anterior
   tabla.innerHTML = '';
 
-  // Dividir el cartón en tres filas
-  const fila1 = carton.slice(0, 5);
-  const fila2 = carton.slice(5, 10);
-  const fila3 = carton.slice(10, 15);
-
   // Crear una fila para los números del cartón
-  const fila1Element = document.createElement('tr');
-  const fila2Element = document.createElement('tr');
-  const fila3Element = document.createElement('tr');
+  const fila = document.createElement('div');
+  fila.classList.add('grid', 'grid-cols-5', 'w-100', 'h-40');
 
-  // Mostrar los números en las filas
-  fila1.forEach(numero => {
-      const celda = document.createElement('td');
-      celda.textContent = numero;
-      celda.classList.add('casilla');
-      fila1Element.appendChild(celda);
-  });
+  // Mostrar los números en la tabla
+  for (let i = 0; i < carton.length; i++) {
+      const celda = document.createElement('div');
+      celda.textContent = carton[i];
+      celda.classList.add('border-2', 'border-gray-300', 'text-base', 'text-center', 'flex', 'justify-center', 'items-center');
+      fila.appendChild(celda);
+  }
 
-  fila2.forEach(numero => {
-      const celda = document.createElement('td');
-      celda.textContent = numero;
-      celda.classList.add('casilla');
-      fila2Element.appendChild(celda);
-  });
-
-  fila3.forEach(numero => {
-      const celda = document.createElement('td');
-      celda.textContent = numero;
-      celda.classList.add('casilla');
-      fila3Element.appendChild(celda);
-  });
-
-  // Agregar las filas a la tabla
-  tabla.appendChild(fila1Element);
-  tabla.appendChild(fila2Element);
-  tabla.appendChild(fila3Element);
+  // Agregar la fila a la tabla
+  tabla.appendChild(fila);
 }
 
 function generarNumerosCarton() {
