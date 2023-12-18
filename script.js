@@ -1,5 +1,6 @@
 let numerosBingo = [];
 let interval;
+let alertaPrimeraLineaMostrada = [false, false, false, false];
 
 function mostrarCartones(cantidad) {
   // Ocultar los botones y mostrar los cartones
@@ -77,14 +78,15 @@ function generarNumeroUnico(min, max, numerosExcluidos) {
 
   return numero;
 }
-function iniciarBingo() {
-    // Iniciar generación de números aleatorios
-    interval = setInterval(generarNumeroBingo, 1000);
-}
 
 function generarNumeroBingo() {
-    // Generar número aleatorio del 1 al 90
-    const numero = Math.floor(Math.random() * 90) + 1;
+    // Generar número aleatorio del 1 al 90 que no se haya generado antes
+    let numero;
+    do {
+        numero = Math.floor(Math.random() * 90) + 1;
+    } while (numerosBingo.includes(numero));
+
+    // Agregar el número a la lista
     numerosBingo.push(numero);
 
     // Actualizar la visualización de los números de Bingo
@@ -105,18 +107,39 @@ function mostrarNumerosBingo() {
     for (const numero of ultimosNumeros) {
         const numeroElement = document.createElement('div');
         numeroElement.textContent = numero;
-        numeroElement.classList.add('bg-gray-300', 'p-2', 'rounded', 'm-2', 'inline-block');
+        numeroElement.classList.add('bg-gray-300', 'p-2', 'rounded', 'm-2', 'inline-block', 'animated-number');
         numerosBingoSection.appendChild(numeroElement);
     }
 }
 
+function iniciarBingo() {
+    // Iniciar generación de números aleatorios
+    interval = setInterval(generarNumeroBingo, 500); // Cambié a 2000 ms (2 segundos) para hacer la animación más lenta
+}
+
+
 
 function comprobarNumerosEnCartones() {
-    // Comprobar si algún número de Bingo está en los cartones y cambiar el fondo a verde
+    // Comprobar si se completa una línea horizontal en algún cartón
     for (let i = 1; i <= 4; i++) {
         const tabla = document.getElementById(`tablaCarton${i}`);
-        const celdas = tabla.querySelectorAll('.text-center');
-        for (const celda of celdas) {
+        const filas = tabla.querySelectorAll('.text-center');
+
+        // Verificar si se completa una línea horizontal
+        const lineaCompleta = Array.from(filas).some((celda, index, array) => {
+            const filaIndex = Math.floor(index / 5);
+            const fila = array.slice(filaIndex * 5, (filaIndex + 1) * 5);
+            return fila.every(c => c.textContent !== '' && c.style.backgroundColor === 'green');
+        });
+
+        // Mostrar la alerta solo si se completa una línea y no se ha mostrado antes
+        if (lineaCompleta && !alertaPrimeraLineaMostrada[i - 1]) {
+            alert(`¡Línea completada en el Cartón ${i}!`);
+            alertaPrimeraLineaMostrada[i - 1] = true; // Marcar la alerta como mostrada para este cartón
+        }
+
+        // Cambiar el fondo a verde si el número coincide con algún número de Bingo
+        for (const celda of filas) {
             const numeroCarton = parseInt(celda.textContent, 10);
             if (numerosBingo.includes(numeroCarton)) {
                 celda.style.backgroundColor = 'green';
@@ -124,6 +147,8 @@ function comprobarNumerosEnCartones() {
         }
     }
 }
+
+
 
 
 
