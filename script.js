@@ -1,3 +1,6 @@
+let numerosBingo = [];
+let interval;
+
 function mostrarCartones(cantidad) {
   // Ocultar los botones y mostrar los cartones
   document.getElementById('menu').style.display = 'none';
@@ -73,6 +76,53 @@ function generarNumeroUnico(min, max, numerosExcluidos) {
   } while (numerosExcluidos.includes(numero));
 
   return numero;
+}
+function iniciarBingo() {
+    // Iniciar generación de números aleatorios
+    interval = setInterval(generarNumeroBingo, 1000);
+}
+
+function generarNumeroBingo() {
+    // Generar número aleatorio del 1 al 90
+    const numero = Math.floor(Math.random() * 90) + 1;
+    numerosBingo.push(numero);
+
+    // Actualizar la visualización de los números de Bingo
+    mostrarNumerosBingo();
+
+    // Comprobar si algún número está en los cartones y cambiar el fondo a verde
+    comprobarNumerosEnCartones();
+}
+
+function mostrarNumerosBingo() {
+    // Mostrar solo los últimos 10 números generados en una sección
+    const numerosBingoSection = document.getElementById('numerosBingo');
+    numerosBingoSection.innerHTML = '<h2>Números de Bingo</h2>';
+
+    // Obtener los últimos 10 números
+    const ultimosNumeros = numerosBingo.slice(-10);
+
+    for (const numero of ultimosNumeros) {
+        const numeroElement = document.createElement('div');
+        numeroElement.textContent = numero;
+        numeroElement.classList.add('bg-gray-300', 'p-2', 'rounded', 'm-2', 'inline-block');
+        numerosBingoSection.appendChild(numeroElement);
+    }
+}
+
+
+function comprobarNumerosEnCartones() {
+    // Comprobar si algún número de Bingo está en los cartones y cambiar el fondo a verde
+    for (let i = 1; i <= 4; i++) {
+        const tabla = document.getElementById(`tablaCarton${i}`);
+        const celdas = tabla.querySelectorAll('.text-center');
+        for (const celda of celdas) {
+            const numeroCarton = parseInt(celda.textContent, 10);
+            if (numerosBingo.includes(numeroCarton)) {
+                celda.style.backgroundColor = 'green';
+            }
+        }
+    }
 }
 
 

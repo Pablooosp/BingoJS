@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="style.css">
     <script src="script.js"></script>
 </head>
-<body class="bg-gradient-to-br from-[#232526] to-[#414345] m-0 xl:h-screen">
+<body class="bg-gradient-to-br from-[#232526] to-[#414345] m-0 xl:h-screen xl:overflow-hidden">
     <!--HEADER FIJO-->
     <header class="h-[10vh] p-8 flex justify-between items-center">
         <p class="select-none bg-gradient-to-r from-[#9400D3] to-[#4B0082] inline-block text-transparent bg-clip-text text-2xl duration-700 hover:scale-125">Pablooosp</p>
@@ -59,6 +59,10 @@
             <div id="tablaCarton2" class="carton hidden bg-gray-200 rounded-md text-center m-4 "></div>
             <div id="tablaCarton3" class="carton hidden bg-gray-200 rounded-md text-center m-4 "></div>
             <div id="tablaCarton4" class="carton hidden bg-gray-200 rounded-md text-center m-4 "></div>
+            <button onclick="iniciarBingo()" class="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded mt-4">Play</button>
+            <div id="numerosBingo" class="mt-8">
+                <!-- Aquí se mostrarán los números de Bingo -->
+            </div>
         </section>
     </main>
 
