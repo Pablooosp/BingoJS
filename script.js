@@ -206,4 +206,3 @@ function reiniciarJuego() {
     document.getElementById('reiniciarBtn').classList.add('hidden');
 }
 
-// Resto del código...
