@@ -1,85 +1,91 @@
 let numerosBingo = [];
 let interval;
-let alertaPrimeraLineaMostrada = [false, false, false, false];
+let alertaBingoMostrada = false;
+let alertaPrimerCartonMostrada = false;
+let generacionHabilitada = true;
 
 function mostrarCartones(cantidad) {
-  // Ocultar los botones y mostrar los cartones
-  document.getElementById('menu').style.display = 'none';
-  document.getElementById('cartones').classList.remove('hidden');
+    // Ocultar los botones y mostrar los cartones
+    document.getElementById('menu').style.display = 'none';
+    document.getElementById('cartones').classList.remove('hidden');
 
-  // Mostrar la cantidad de tablas solicitada
-  for (let i = 1; i <= 4; i++) {
-      const tabla = document.getElementById(`tablaCarton${i}`);
-      
-      if (i <= cantidad) {
-          const carton = generarNumerosCarton();
-          mostrarCartonEnTabla(carton, tabla);
-          tabla.classList.remove('hidden');
-      } else {
-          // Ocultar las tablas restantes
-          tabla.classList.add('hidden');
-      }
-  }
+    // Mostrar la cantidad de tablas solicitada
+    for (let i = 1; i <= 4; i++) {
+        const tabla = document.getElementById(`tablaCarton${i}`);
+
+        if (i <= cantidad) {
+            const carton = generarNumerosCarton();
+            mostrarCartonEnTabla(carton, tabla);
+            tabla.classList.remove('hidden');
+        } else {
+            // Ocultar las tablas restantes
+            tabla.classList.add('hidden');
+        }
+    }
 }
 
 function mostrarCartonEnTabla(carton, tabla) {
-  // Limpiar contenido anterior
-  tabla.innerHTML = '';
+    // Limpiar contenido anterior
+    tabla.innerHTML = '';
 
-  // Crear una fila para los números del cartón
-  const fila = document.createElement('div');
-  fila.classList.add('grid', 'grid-cols-5', 'w-100', 'h-40');
+    // Crear una fila para los números del cartón
+    const fila = document.createElement('div');
+    fila.classList.add('grid', 'grid-cols-5', 'w-100', 'h-40');
 
-  // Mostrar los números en la tabla
-  for (let i = 0; i < carton.length; i++) {
-      const celda = document.createElement('div');
-      celda.textContent = carton[i];
-      celda.classList.add('border-2', 'border-gray-300', 'text-base', 'text-center', 'flex', 'justify-center', 'items-center');
-      fila.appendChild(celda);
-  }
+    // Mostrar los números en la tabla
+    for (let i = 0; i < carton.length; i++) {
+        const celda = document.createElement('div');
+        celda.textContent = carton[i];
+        celda.classList.add('border-2', 'border-gray-300', 'text-base', 'text-center', 'flex', 'justify-center', 'items-center');
+        fila.appendChild(celda);
+    }
 
-  // Agregar la fila a la tabla
-  tabla.appendChild(fila);
+    // Agregar la fila a la tabla
+    tabla.appendChild(fila);
 }
 
 function generarNumerosCarton() {
-  const carton = [];
-  
-  // Generar 5 números únicos del 1 al 30 para la primera fila
-  const fila1 = generarFilaOrdenada(1, 30);
-  carton.push(...fila1);
+    const carton = [];
 
-  // Generar 5 números únicos del 31 al 60 para la segunda fila
-  const fila2 = generarFilaOrdenada(31, 60);
-  carton.push(...fila2);
+    // Generar 5 números únicos del 1 al 30 para la primera fila
+    const fila1 = generarFilaOrdenada(1, 30);
+    carton.push(...fila1);
 
-  // Generar 5 números únicos del 61 al 90 para la tercera fila
-  const fila3 = generarFilaOrdenada(61, 90);
-  carton.push(...fila3);
+    // Generar 5 números únicos del 31 al 60 para la segunda fila
+    const fila2 = generarFilaOrdenada(31, 60);
+    carton.push(...fila2);
 
-  return carton;
+    // Generar 5 números únicos del 61 al 90 para la tercera fila
+    const fila3 = generarFilaOrdenada(61, 90);
+    carton.push(...fila3);
+
+    return carton;
 }
 
 function generarFilaOrdenada(min, max) {
-  const fila = [];
-  for (let i = 0; i < 5; i++) {
-      let numero = generarNumeroUnico(min, max, fila);
-      fila.push(numero);
-  }
-  return fila.sort((a, b) => a - b);
+    const fila = [];
+    for (let i = 0; i < 5; i++) {
+        let numero = generarNumeroUnico(min, max, fila);
+        fila.push(numero);
+    }
+    return fila.sort((a, b) => a - b);
 }
 
 function generarNumeroUnico(min, max, numerosExcluidos) {
-  // Generar número aleatorio único dentro del rango [min, max]
-  let numero;
-  do {
-      numero = Math.floor(Math.random() * (max - min + 1)) + min;
-  } while (numerosExcluidos.includes(numero));
+    // Generar número aleatorio único dentro del rango [min, max]
+    let numero;
+    do {
+        numero = Math.floor(Math.random() * (max - min + 1)) + min;
+    } while (numerosExcluidos.includes(numero));
 
-  return numero;
+    return numero;
 }
 
 function generarNumeroBingo() {
+    if (!generacionHabilitada) {
+        return;
+    }
+
     // Generar número aleatorio del 1 al 90 que no se haya generado antes
     let numero;
     do {
@@ -94,6 +100,7 @@ function generarNumeroBingo() {
 
     // Comprobar si algún número está en los cartones y cambiar el fondo a verde
     comprobarNumerosEnCartones();
+    comprobarCartonCompleto();
 }
 
 function mostrarNumerosBingo() {
@@ -114,15 +121,24 @@ function mostrarNumerosBingo() {
 
 function iniciarBingo() {
     // Iniciar generación de números aleatorios
-    interval = setInterval(generarNumeroBingo, 500); // Cambié a 2000 ms (2 segundos) para hacer la animación más lenta
+    interval = setInterval(generarNumeroBingo, 500); // Cambié a 500 ms para hacer la animación más rápida
 }
 
-
+function detenerGeneracion() {
+    // Detener la generación de números
+    generacionHabilitada = false;
+}
 
 function comprobarNumerosEnCartones() {
     // Comprobar si se completa una línea horizontal en algún cartón
     for (let i = 1; i <= 4; i++) {
         const tabla = document.getElementById(`tablaCarton${i}`);
+        
+        if (tabla.classList.contains('hidden')) {
+            // Si el cartón está oculto, omitir la comprobación
+            continue;
+        }
+
         const filas = tabla.querySelectorAll('.text-center');
 
         // Verificar si se completa una línea horizontal
@@ -133,9 +149,9 @@ function comprobarNumerosEnCartones() {
         });
 
         // Mostrar la alerta solo si se completa una línea y no se ha mostrado antes
-        if (lineaCompleta && !alertaPrimeraLineaMostrada[i - 1]) {
-            alert(`¡Línea completada en el Cartón ${i}!`);
-            alertaPrimeraLineaMostrada[i - 1] = true; // Marcar la alerta como mostrada para este cartón
+        if (lineaCompleta && !alertaBingoMostrada) {
+            alert(`¡Bingo! Se ha completado una línea en el Cartón ${i}!`);
+            alertaBingoMostrada = true; // Marcar la alerta de bingo como mostrada
         }
 
         // Cambiar el fondo a verde si el número coincide con algún número de Bingo
@@ -148,7 +164,46 @@ function comprobarNumerosEnCartones() {
     }
 }
 
+function comprobarCartonCompleto() {
+    // Comprobar si algún cartón está completo
+    for (let i = 1; i <= 4; i++) {
+        const tabla = document.getElementById(`tablaCarton${i}`);
+        
+        // Verificar si el cartón es visible
+        if (!tabla.classList.contains('hidden')) {
+            const filas = tabla.querySelectorAll('.text-center');
 
+            // Verificar si todas las celdas tienen fondo verde
+            const cartonCompleto = Array.from(filas).every(celda => celda.style.backgroundColor === 'green');
 
+            // Mostrar la alerta solo si el cartón se completa y no se ha mostrado antes
+            if (cartonCompleto && !alertaPrimerCartonMostrada) {
+                alert(`¡Bingo! Se ha completado el Cartón ${i}!`);
+                alertaPrimerCartonMostrada = true; // Marcar la alerta del primer cartón como mostrada
+                detenerGeneracion(); // Detener la generación cuando se completa un cartón
+                mostrarBotonReinicio();
+            }
+        }
+    }
+}
 
+function mostrarBotonReinicio() {
+    const reiniciarBtn = document.getElementById('reiniciarBtn');
+    reiniciarBtn.classList.remove('hidden');
+}
 
+function reiniciarJuego() {
+    // Detener la generación de números aleatorios
+    clearInterval(interval);
+
+    // Reiniciar variables y ocultar los cartones
+    numerosBingo = [];
+    alertaBingoMostrada = false;
+    alertaPrimerCartonMostrada = false;
+    generacionHabilitada = true; // Restablecer la generación
+    document.getElementById('menu').style.display = 'block';
+    document.getElementById('cartones').classList.add('hidden');
+    document.getElementById('reiniciarBtn').classList.add('hidden');
+}
+
+// Resto del código...

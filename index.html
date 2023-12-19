@@ -54,12 +54,17 @@
                 </section>
             </section>
         </section>
-        <section id="cartones" class="hidden m-10 lg:mx-[30vw] md:mx-[20vw] lg:grid lg:grid-cols-2">
-            <div id="tablaCarton1" class="carton hidden bg-gray-200 rounded-md text-center m-4 "></div>
-            <div id="tablaCarton2" class="carton hidden bg-gray-200 rounded-md text-center m-4 "></div>
-            <div id="tablaCarton3" class="carton hidden bg-gray-200 rounded-md text-center m-4 "></div>
-            <div id="tablaCarton4" class="carton hidden bg-gray-200 rounded-md text-center m-4 "></div>
-            <button onclick="iniciarBingo()" class="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded mt-4">Play</button>
+        <section id="cartones" class="hidden m-10 lg:mx-[30vw] md:mx-[20vw]">
+            <section class="lg:grid lg:grid-cols-2">
+                <div id="tablaCarton1" class="carton hidden bg-gray-200 rounded-md text-center m-4 "></div>
+                <div id="tablaCarton2" class="carton hidden bg-gray-200 rounded-md text-center m-4 "></div>
+                <div id="tablaCarton3" class="carton hidden bg-gray-200 rounded-md text-center m-4 "></div>
+                <div id="tablaCarton4" class="carton hidden bg-gray-200 rounded-md text-center m-4 "></div>
+            </section>
+            <section class="grid grid-cols-2">
+                <button onclick="iniciarBingo()" class="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded mx-2 mt-4">Play</button>
+                <button onclick="reiniciarJuego()" id="reiniciarBtn" class="text-white bg-red-700 hover:bg-red-800 font-bold rounded px-4 py-2 mx-2 mt-4 hidden">Reiniciar</button>
+            </section>
             <div id="numerosBingo" class="mt-8">
                 <!-- Aquí se mostrarán los números de Bingo -->
             </div>
